@@ -1,16 +1,7 @@
-[gd_scene load_steps=5 format=1]
+[gd_scene load_steps=4 format=1]
 
 [ext_resource path="res://square.png" type="Texture" id=1]
 [ext_resource path="res://scripts/world-player-movement.gd" type="Script" id=2]
-
-[sub_resource type="GDScript" id=2]
-
-script/source = "# script: dialog (built-in)
-extends Polygon2D
-
-func _ready():
-	hide()
-"
 
 [sub_resource type="GDScript" id=1]
 
@@ -19,11 +10,28 @@ script/source = "# script: cntr_pause (built-in)
 extends Container
 
 var focused = \"Menu/Items\"
+var dialog_box = preload(\"res://dialog_box.tscn\")
 
 func _ready():
 	hide()
+	get_node(\"Menu/Save\").connect(\"pressed\", self, \"save\")
 	get_node(\"Menu/Resume\").connect(\"pressed\", self, \"toggle_pause\")
+	get_node(\"Menu/Quit\").connect(\"pressed\", self, \"quit\")
 	set_process_input(true)
+
+var save_dialog = null
+func save():
+	save_dialog = dialog_box.instance()
+	add_child(save_dialog)
+	save_dialog.dialog = [\"Do you really want to save?\"]
+	save_dialog.load_page(0)
+	save_dialog.connect(\"complete\", self, \"save_callback\")
+
+func save_callback(flags):
+	save_dialog.remove()
+
+func quit():
+	get_tree().quit()
 
 func toggle_pause():
 	if get_tree().is_paused(): 
@@ -94,33 +102,6 @@ offset = Vector2( 0, 0 )
 rotation = 0.0
 scale = Vector2( 1, 1 )
 
-[node name="cntr_overlay" type="Container" parent="interface"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 320.0
-margin/bottom = 240.0
-
-[node name="dialog" type="Polygon2D" parent="interface/cntr_overlay"]
-
-transform/pos = Vector2( 160, 120 )
-polygon = Vector2Array( -144, 64, 144, 64, 144, 112, -144, 112 )
-uv = Vector2Array(  )
-color = Color( 1, 1, 1, 1 )
-vertex_colors = ColorArray(  )
-offset = Vector2( 0, 0 )
-texture/texture = null
-texture/offset = Vector2( 0, 0 )
-texture/scale = Vector2( 1, 1 )
-texture/rotation = 0.0
-invert/enable = false
-invert/border = 100.0
-script/script = SubResource( 2 )
-
 [node name="cntr_pause" type="Container" parent="interface"]
 
 process/pause_mode = 2
@@ -137,7 +118,7 @@ script/script = SubResource( 1 )
 [node name="background" type="Polygon2D" parent="interface/cntr_pause"]
 
 transform/pos = Vector2( 160, 120 )
-polygon = Vector2Array( -176, -128, 176, -128, 176, 128, -176, 128 )
+polygon = Vector2Array( -160, -120, 160, -120, 160, 120, -160, 120 )
 uv = Vector2Array(  )
 color = Color( 0.182159, 0.276119, 0.367188, 0.546431 )
 vertex_colors = ColorArray(  )
@@ -211,6 +192,22 @@ toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
 text = "Resume"
+flat = false
+
+[node name="Quit" type="Button" parent="interface/cntr_pause/Menu"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 72.0
+margin/right = 64.0
+margin/bottom = 92.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Quit"
 flat = false
 
 [connection signal="tween_complete" from="world/player/tween" to="world/player" method="_on_tween_complete"]

@@ -1,0 +1,64 @@
+[gd_scene load_steps=2 format=1]
+
+[ext_resource path="res://scripts/dialog_box.gd" type="Script" id=1]
+
+[node name="dialog_box" type="CanvasLayer"]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+script/script = ExtResource( 1 )
+dialog = [  ]
+page = 0
+
+[node name="Timer" type="Timer" parent="."]
+
+process_mode = 1
+wait_time = 0.05
+one_shot = false
+autostart = true
+
+[node name="screen" type="Container" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 320.0
+margin/bottom = 240.0
+
+[node name="back" type="Polygon2D" parent="screen"]
+
+transform/pos = Vector2( 160, 120 )
+polygon = Vector2Array( -144, 56, 144, 56, 144, 104, -144, 104 )
+uv = Vector2Array(  )
+color = Color( 1, 1, 1, 1 )
+vertex_colors = ColorArray(  )
+offset = Vector2( 0, 0 )
+texture/texture = null
+texture/offset = Vector2( 0, 0 )
+texture/scale = Vector2( 1, 1 )
+texture/rotation = 0.0
+invert/enable = false
+invert/border = 100.0
+
+[node name="text" type="RichTextLabel" parent="screen"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 24.0
+margin/top = 184.0
+margin/right = 296.0
+margin/bottom = 216.0
+bbcode/enabled = false
+bbcode/bbcode = ""
+visible_characters = -1
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+
+
