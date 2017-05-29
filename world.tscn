@@ -1,7 +1,16 @@
-[gd_scene load_steps=4 format=1]
+[gd_scene load_steps=5 format=1]
 
 [ext_resource path="res://square.png" type="Texture" id=1]
 [ext_resource path="res://scripts/world-player-movement.gd" type="Script" id=2]
+
+[sub_resource type="GDScript" id=2]
+
+script/source = "# script: dialog (built-in)
+extends Polygon2D
+
+func _ready():
+	hide()
+"
 
 [sub_resource type="GDScript" id=1]
 
@@ -38,23 +47,21 @@ process/pause_mode = 2
 [node name="world" type="Node" parent="."]
 
 process/pause_mode = 1
-editor/display_folded = true
 
-[node name="square" type="Sprite" parent="world"]
+[node name="player" type="Sprite" parent="world"]
 
-editor/display_folded = true
 texture = ExtResource( 1 )
-offset = Vector2( 8, 8 )
+centered = false
 script/script = ExtResource( 2 )
 
-[node name="tween" type="Tween" parent="world/square"]
+[node name="tween" type="Tween" parent="world/player"]
 
 playback/process_mode = 1
 playback/active = false
 playback/repeat = false
 playback/speed = 1.0
 
-[node name="camera" type="Camera2D" parent="world/square"]
+[node name="camera" type="Camera2D" parent="world/player"]
 
 anchor_mode = 1
 rotating = false
@@ -73,6 +80,12 @@ drag_margin/top = 0.2
 drag_margin/right = 0.2
 drag_margin/bottom = 0.2
 
+[node name="monster" type="Sprite" parent="world"]
+
+transform/pos = Vector2( 32, 16 )
+texture = ExtResource( 1 )
+centered = false
+
 [node name="interface" type="CanvasLayer" parent="."]
 
 process/pause_mode = 2
@@ -80,6 +93,33 @@ layer = 1
 offset = Vector2( 0, 0 )
 rotation = 0.0
 scale = Vector2( 1, 1 )
+
+[node name="cntr_overlay" type="Container" parent="interface"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 320.0
+margin/bottom = 240.0
+
+[node name="dialog" type="Polygon2D" parent="interface/cntr_overlay"]
+
+transform/pos = Vector2( 160, 120 )
+polygon = Vector2Array( -144, 64, 144, 64, 144, 112, -144, 112 )
+uv = Vector2Array(  )
+color = Color( 1, 1, 1, 1 )
+vertex_colors = ColorArray(  )
+offset = Vector2( 0, 0 )
+texture/texture = null
+texture/offset = Vector2( 0, 0 )
+texture/scale = Vector2( 1, 1 )
+texture/rotation = 0.0
+invert/enable = false
+invert/border = 100.0
+script/script = SubResource( 2 )
 
 [node name="cntr_pause" type="Container" parent="interface"]
 
@@ -94,8 +134,24 @@ margin/right = 320.0
 margin/bottom = 240.0
 script/script = SubResource( 1 )
 
+[node name="background" type="Polygon2D" parent="interface/cntr_pause"]
+
+transform/pos = Vector2( 160, 120 )
+polygon = Vector2Array( -176, -128, 176, -128, 176, 128, -176, 128 )
+uv = Vector2Array(  )
+color = Color( 0.182159, 0.276119, 0.367188, 0.546431 )
+vertex_colors = ColorArray(  )
+offset = Vector2( 0, 0 )
+texture/texture = null
+texture/offset = Vector2( 0, 0 )
+texture/scale = Vector2( 1, 1 )
+texture/rotation = 0.0
+invert/enable = false
+invert/border = 100.0
+
 [node name="Menu" type="VBoxContainer" parent="interface/cntr_pause"]
 
+editor/display_folded = true
 anchor/left = 1
 anchor/right = 1
 anchor/bottom = 1
@@ -103,9 +159,9 @@ focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
-margin/left = 40.0
+margin/left = 88.0
 margin/top = 32.0
-margin/right = -24.0
+margin/right = 24.0
 margin/bottom = 4.0
 alignment = 0
 
@@ -157,6 +213,6 @@ shortcut = null
 text = "Resume"
 flat = false
 
-[connection signal="tween_complete" from="world/square/tween" to="world/square" method="_on_tween_complete"]
+[connection signal="tween_complete" from="world/player/tween" to="world/player" method="_on_tween_complete"]
 
 
