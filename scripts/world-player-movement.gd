@@ -2,6 +2,7 @@ extends Sprite
 
 var endPos = Vector2(0, 0)
 var startPos = Vector2(0, 0)
+var direction = Vector2(0, 1)
 var tween = null
 var moving = false
 
@@ -33,11 +34,14 @@ func _fixed_process(delta):
 
 func move(dir):
 	moving = true
+	direction = dir
 	startPos = get_pos()
 	endPos = Vector2(startPos.x + dir.x * GRID, startPos.y + dir.y * GRID)
-	
+	var time = WALK_TIME
+	if Input.is_action_pressed("ui_cancel"):
+		time = SPRINT_TIME
 	tween.interpolate_property(self, "transform/pos", startPos, endPos, 
-								WALK_TIME, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+								time, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.start()
 
 
