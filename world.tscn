@@ -21,14 +21,18 @@ func _ready():
 
 var save_dialog = null
 func save():
+	focused = get_path_to(get_focus_owner())
 	save_dialog = dialog_box.instance()
 	add_child(save_dialog)
-	save_dialog.dialog = [\"Do you really want to save?\"]
-	save_dialog.load_page(0)
-	save_dialog.connect(\"complete\", self, \"save_callback\")
+	save_dialog.add_dialog(\"Do you really want to save?\")
+	save_dialog.connect(\"complete\", self, \"save_thing\")
+	save_dialog.start()
 
-func save_callback(flags):
-	save_dialog.remove()
+func save_thing():
+	print(\"Saved!\")
+	save_dialog.disconnect(\"complete\", self, \"save_thing\")
+	save_dialog.queue_free()
+	get_node(focused).grab_focus()
 
 func quit():
 	get_tree().quit()
