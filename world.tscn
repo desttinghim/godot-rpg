@@ -9,6 +9,8 @@ script/source = "# script: cntr_pause (built-in)
 
 extends Container
 
+var focused = \"Menu/Items\"
+
 func _ready():
 	hide()
 	get_node(\"Menu/Resume\").connect(\"pressed\", self, \"toggle_pause\")
@@ -17,9 +19,11 @@ func _ready():
 func toggle_pause():
 	if get_tree().is_paused(): 
 		get_tree().set_pause(false)
+		focused = get_path_to(get_focus_owner())
 		hide()
 	else:
 		get_tree().set_pause(true)
+		get_node(focused).grab_focus()
 		show()
 
 func _input(event):
@@ -69,9 +73,13 @@ drag_margin/top = 0.2
 drag_margin/right = 0.2
 drag_margin/bottom = 0.2
 
-[node name="interface" type="Node" parent="."]
+[node name="interface" type="CanvasLayer" parent="."]
 
 process/pause_mode = 2
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
 
 [node name="cntr_pause" type="Container" parent="interface"]
 
@@ -82,7 +90,7 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 64.0
+margin/right = 320.0
 margin/bottom = 240.0
 script/script = SubResource( 1 )
 
@@ -96,9 +104,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 40.0
-margin/top = 0.0
+margin/top = 32.0
 margin/right = -24.0
-margin/bottom = -28.0
+margin/bottom = 4.0
 alignment = 0
 
 [node name="Items" type="Button" parent="interface/cntr_pause/Menu"]
