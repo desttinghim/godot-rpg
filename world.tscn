@@ -1,25 +1,56 @@
-[gd_scene load_steps=3 format=1]
+[gd_scene load_steps=4 format=1]
 
 [ext_resource path="res://square.png" type="Texture" id=1]
 [ext_resource path="res://scripts/world-player-movement.gd" type="Script" id=2]
 
-[node name="world" type="Node"]
+[sub_resource type="GDScript" id=1]
 
-[node name="square" type="Sprite" parent="."]
+script/source = "# script: cntr_pause (built-in)
+
+extends Container
+
+func _ready():
+	hide()
+	get_node(\"Menu/Resume\").connect(\"pressed\", self, \"toggle_pause\")
+	set_process_input(true)
+
+func toggle_pause():
+	if get_tree().is_paused(): 
+		get_tree().set_pause(false)
+		hide()
+	else:
+		get_tree().set_pause(true)
+		show()
+
+func _input(event):
+	if event.is_action_pressed(\"ui_pause\"):
+		toggle_pause()
+"
+
+[node name="scene" type="Node"]
+
+process/pause_mode = 2
+
+[node name="world" type="Node" parent="."]
+
+process/pause_mode = 1
+editor/display_folded = true
+
+[node name="square" type="Sprite" parent="world"]
 
 editor/display_folded = true
 texture = ExtResource( 1 )
 offset = Vector2( 8, 8 )
 script/script = ExtResource( 2 )
 
-[node name="Tween" type="Tween" parent="square"]
+[node name="tween" type="Tween" parent="world/square"]
 
 playback/process_mode = 1
 playback/active = false
 playback/repeat = false
 playback/speed = 1.0
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="camera" type="Camera2D" parent="world/square"]
 
 anchor_mode = 1
 rotating = false
@@ -29,8 +60,8 @@ limit/left = -10000000
 limit/top = -10000000
 limit/right = 10000000
 limit/bottom = 10000000
-drag_margin/h_enabled = true
-drag_margin/v_enabled = true
+drag_margin/h_enabled = false
+drag_margin/v_enabled = false
 smoothing/enable = false
 smoothing/speed = 5.0
 drag_margin/left = 0.2
@@ -38,6 +69,86 @@ drag_margin/top = 0.2
 drag_margin/right = 0.2
 drag_margin/bottom = 0.2
 
-[connection signal="tween_complete" from="square/Tween" to="square" method="_on_tween_complete"]
+[node name="interface" type="Node" parent="."]
+
+process/pause_mode = 2
+
+[node name="cntr_pause" type="Container" parent="interface"]
+
+process/pause_mode = 2
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 64.0
+margin/bottom = 240.0
+script/script = SubResource( 1 )
+
+[node name="Menu" type="VBoxContainer" parent="interface/cntr_pause"]
+
+anchor/left = 1
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 40.0
+margin/top = 0.0
+margin/right = -24.0
+margin/bottom = -28.0
+alignment = 0
+
+[node name="Items" type="Button" parent="interface/cntr_pause/Menu"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 64.0
+margin/bottom = 20.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Items"
+flat = false
+
+[node name="Save" type="Button" parent="interface/cntr_pause/Menu"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 24.0
+margin/right = 64.0
+margin/bottom = 44.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Save"
+flat = false
+
+[node name="Resume" type="Button" parent="interface/cntr_pause/Menu"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 48.0
+margin/right = 64.0
+margin/bottom = 68.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Resume"
+flat = false
+
+[connection signal="tween_complete" from="world/square/tween" to="world/square" method="_on_tween_complete"]
 
 

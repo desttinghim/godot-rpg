@@ -16,8 +16,8 @@ func _ready():
 	startPos = get_pos()
 	endPos = startPos
 	
-	if has_node("Tween"):
-		tween = get_node("Tween")
+	if has_node("tween"):
+		tween = get_node("tween")
 	else:
 		tween = add_child(Tween)
 
