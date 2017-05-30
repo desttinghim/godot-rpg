@@ -122,9 +122,8 @@ shortcut = null
 text = "Magic"
 flat = false
 
-[node name="MeleeMenu" type="VBoxContainer" parent="interface/cntr_battle_menu"]
+[node name="SubMenu" type="VBoxContainer" parent="interface/cntr_battle_menu"]
 
-visibility/visible = false
 anchor/bottom = 1
 focus/ignore_mouse = false
 focus/stop_mouse = false
@@ -135,37 +134,5 @@ margin/top = 32.0
 margin/right = 115.0
 margin/bottom = 168.0
 alignment = 0
-
-[node name="Punch" type="Button" parent="interface/cntr_battle_menu/MeleeMenu"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 51.0
-margin/bottom = 20.0
-toggle_mode = false
-enabled_focus_mode = 2
-shortcut = null
-text = "Punch"
-flat = false
-
-[node name="Back" type="Button" parent="interface/cntr_battle_menu/MeleeMenu"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 51.0
-margin/bottom = 20.0
-toggle_mode = false
-enabled_focus_mode = 2
-shortcut = null
-text = "Back"
-flat = false
 
 
