@@ -1,6 +1,7 @@
 extends CanvasLayer
 
 signal complete
+signal decision(string)
 
 enum PAGE_TYPE {
 	dialog,
@@ -23,12 +24,18 @@ var next = null
 var decisions = null
 
 func _ready():
-	text = get_node("screen/text")
-	next = get_node("screen/next")
-	decisions = get_node("screen/decisions")
+	text = get_node("screen/dialog/text")
+	text.connect("input_event", self, "_on_text_input")
+	
+	next = get_node("screen/dialog/next")
 	next.connect("pressed", self, "next")
-	connect("complete", self, "test_signal_complete")
+	
+	decisions = get_node("screen/decisions/decisions")
 	set_process_input(true)
+
+func _input(event):
+	if event.is_action_released("ui_select"):
+		next()
 
 func add_dialog(line):
 	pages.append(Page.new(PAGE_TYPE.dialog, line, "")) 
@@ -46,16 +53,21 @@ func load_page(pg):
 		return
 	if pages[pg].type == PAGE_TYPE.dialog:
 		text.set_bbcode(pages[pg].dialog)
+		text.set_visible_characters(0)
+		text.grab_focus()
 	else:
 		for option in pages[pg].decisions:
 			var btn = Button.new()
 			btn.set_text(option)
+			btn.connect("pressed", self, "decision_callback", [option])
 			decisions.add_child(btn)
-	text.set_visible_characters(0)
+		decisions.get_child(0).grab_focus()
 	next.hide()
-	text.grab_focus()
 
 func next():
+	if not all_characters_shown():
+		text.set_visible_characters(text.get_total_character_count())
+		return
 	page += 1
 	if page >= pages.size():
 		emit_signal("complete")
@@ -63,11 +75,14 @@ func next():
 	else:
 		load_page(page)
 
-func test_signal_complete():
-	print("complete! YAY")
+func decision_callback(option):
+	emit_signal("decision", option)
+
+func all_characters_shown():
+	return text.get_visible_characters() >= text.get_total_character_count()
 
 func _on_Timer_timeout():
-	if text.get_visible_characters() >= text.get_total_character_count():
+	if all_characters_shown():
 		next.show()
 		next.grab_focus()
 		get_node("Timer").stop()

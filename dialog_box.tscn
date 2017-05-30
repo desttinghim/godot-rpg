@@ -28,7 +28,19 @@ margin/top = 0.0
 margin/right = 320.0
 margin/bottom = 240.0
 
-[node name="back" type="Polygon2D" parent="screen"]
+[node name="dialog" type="Container" parent="screen"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 40.0
+margin/bottom = 40.0
+
+[node name="back" type="Polygon2D" parent="screen/dialog"]
 
 transform/pos = Vector2( 160, 120 )
 polygon = Vector2Array( -144, 56, 144, 56, 144, 104, -144, 104 )
@@ -43,7 +55,7 @@ texture/rotation = 0.0
 invert/enable = false
 invert/border = 100.0
 
-[node name="text" type="RichTextLabel" parent="screen"]
+[node name="text" type="RichTextLabel" parent="screen/dialog"]
 
 focus/ignore_mouse = false
 focus/stop_mouse = true
@@ -57,7 +69,7 @@ bbcode/enabled = false
 bbcode/bbcode = ""
 visible_characters = -1
 
-[node name="next" type="Button" parent="screen"]
+[node name="next" type="Button" parent="screen/dialog"]
 
 visibility/visible = false
 focus/ignore_mouse = false
@@ -74,16 +86,45 @@ shortcut = null
 text = "Next"
 flat = false
 
-[node name="decisions" type="VBoxContainer" parent="screen"]
+[node name="decisions" type="Container" parent="screen"]
 
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 32.0
+margin/right = 48.0
+margin/bottom = 144.0
+
+[node name="back" type="Polygon2D" parent="screen/decisions"]
+
+transform/pos = Vector2( 16, 32 )
+polygon = Vector2Array( -16, -32, 32, -32, 32, 32, -16, 32 )
+uv = Vector2Array(  )
+color = Color( 0.376564, 0.158936, 0.4375, 1 )
+vertex_colors = ColorArray(  )
+offset = Vector2( 0, 0 )
+texture/texture = null
+texture/offset = Vector2( 0, 0 )
+texture/scale = Vector2( 1, 1 )
+texture/rotation = 0.0
+invert/enable = false
+invert/border = 100.0
+
+[node name="decisions" type="VBoxContainer" parent="screen/decisions"]
+
+anchor/right = 1
+anchor/bottom = 1
 focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 40.0
-margin/bottom = 40.0
+margin/right = 16.0
+margin/bottom = 0.0
 alignment = 0
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

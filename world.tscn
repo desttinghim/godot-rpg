@@ -26,10 +26,18 @@ func save():
 	add_child(save_dialog)
 	save_dialog.add_dialog(\"Do you really want to save?\")
 	save_dialog.add_decision([\"Yes\", \"No\"])
-	save_dialog.connect(\"complete\", self, \"save_callback\")
+	save_dialog.connect(\"decision\", self, \"save_callback\")
+	save_dialog.connect(\"complete\", self, \"save_done\")
 	save_dialog.start()
 
-func save_callback():
+func save_callback(decision):
+	if decision == \"Yes\":
+		print(\"Saving...\")
+	else:
+		print(\"Cancelling save.\")
+	save_dialog.next()
+
+func save_done():
 	print(\"Saved!\")
 	get_node(focused).grab_focus()
 
