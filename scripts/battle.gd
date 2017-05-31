@@ -1,19 +1,15 @@
 extends Node
 
+var Move = preload("res://scripts/move.gd")
+
 var battle_menu = null
-var battle_menu_focus = "Items"
+var battle_menu_focus = ""
 var sub_menu = null
 
 var combatants
 var team_1
 var team_2
 var targeter
-
-class Combatant:
-	var side
-	var stats = {"hp":3, "mp":3, "max_hp":3, "max_mp":3}
-	func _init(stats):
-		self.stats = stats
 
 class Action:
 	var origins = []
@@ -26,18 +22,13 @@ class Action:
 	func set_stat(stat, val):
 		stats[stat] = val
 
+var main_menu = {moves = "showmenu_moves", items = "showmenu_items"}
+
 func _ready():
-	var melee_menu = {"Punch": "melee_punch"}
-	var ranged_menu = {"Shoot": "ranged_shot"}
-	var magic_menu = {"Heal": "magic_heal"}
-	var item_menu = {"Cookie": "item_cookie"}
 	
 	battle_menu = get_node("interface/cntr_battle_menu/BattleMenu")
-	battle_menu.get_node("Melee").connect("pressed", self, "show_menu", [melee_menu])
-	battle_menu.get_node("Ranged").connect("pressed", self, "show_menu", [ranged_menu])
-	battle_menu.get_node("Magic").connect("pressed", self, "show_menu", [magic_menu])
-	battle_menu.get_node("Items").connect("pressed", self, "show_menu", [item_menu])
-	battle_menu.get_node(battle_menu_focus).grab_focus()
+	create_battle_menu(main_menu)
+	show_battle_menu()
 	
 	sub_menu = get_node("interface/cntr_battle_menu/SubMenu")
 	
@@ -48,16 +39,34 @@ func _ready():
 	
 	set_process_input(true)
 
+# Callbacks
 var current_action
 func btn_callback(txt):
-	if txt.split("_")[0] == "melee":
-		show_target_select("team_2")
-		sub_menu.release_focus()
-		current_action = Action.new()
-		current_action.set_stat("dmg", 3)
-		current_action.set_stat("cost", 3)
-		current_action.add_origin(get_node("battlground/player"))
+	var call = txt.split("_")
+	if call[0] == "showmenu" and call.size() > 1:
+		if call[1] == "main":
+			create_battle_menu(main_menu)
+			show_battle_menu()
+		elif call[1] == "moves":
+			create_battle_menu(get_moves_menu("player"))
+			show_battle_menu()
+		elif call[1] == "items":
+			pass # do nothing for now
 	print(txt)
+
+func get_moves_menu(node_name):
+	var node
+	for combatant in get_tree().get_nodes_in_group("combatant"):
+		if combatant.get_name() == node_name:
+			node = combatant
+			break
+	var moves = {}
+	for child in node.get_children():
+		print(child.get_type(), " : ", child.get_name())
+		if child extends Move:
+			moves[child.display_name] = str("move_", node.get_name(), "_", child.get_name())
+	moves["back"] = "showmenu_main" 
+	return moves
 
 func select_callback(target):
 	current_action.add_target(target)
@@ -73,6 +82,26 @@ func apply_action(action):
 		print(target.get_name(), " takes ", action.stats["dmg"], " damage.")
 	action_history.append(action)
 
+# Menu UI
+func create_battle_menu(menu):
+	for node in battle_menu.get_children():
+		node.queue_free()
+	for key in menu.keys():
+		var btn = Button.new()
+		btn.text = key
+		btn.connect("pressed", self, "btn_callback", [menu[key]])
+		battle_menu.add_child(btn)
+		battle_menu_focus = btn.get_name()
+	#battle_menu_focus = battle_menu.get_child(0).get_name()
+
+func show_battle_menu():
+	battle_menu.show()
+	battle_menu.get_node(battle_menu_focus).grab_focus()
+
+func hide_battle_menu():
+	battle_menu.hide()
+
+# Sub menu UI
 func show_menu(menu):
 	battle_menu_focus = battle_menu.get_path_to(battle_menu.get_focus_owner())
 	for item in menu.keys():
@@ -93,7 +122,8 @@ func hide_menu():
 	for node in sub_menu.get_children():
 		node.queue_free()
 	battle_menu.get_node(battle_menu_focus).grab_focus()
-
+	
+# Targeting UI
 func show_target_select(group):
 	for target in get_tree().get_nodes_in_group(group):
 		var selector = Button.new()

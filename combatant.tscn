@@ -9,8 +9,8 @@ script/script = ExtResource( 1 )
 display_name = "Combatant"
 power = 1
 health = 50
-editor_stats = ""
-editor_moves = ""
+_stats = ""
+_moves = ""
 
 [node name="Sprite" type="Sprite" parent="."]
 
