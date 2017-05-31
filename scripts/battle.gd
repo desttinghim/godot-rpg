@@ -101,10 +101,13 @@ func hide_battle_menu():
 func show_target_select(group):
 	for target in get_tree().get_nodes_in_group(group):
 		var selector = Button.new()
-		selector.set_pos(target.get_pos())
-		selector.set_text(target.get_name())
+		selector.set_text(target.display_name)
 		selector.connect("pressed", targeter, "target_selected", [target])
 		targeter.add_child(selector)
+		
+		var tpos = target.get_pos()
+		tpos.x -= selector.get_size().x / 2
+		selector.set_pos(tpos)
 	targeter.show()
 	targeter.get_children()[0].grab_focus()
 

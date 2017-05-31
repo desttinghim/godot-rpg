@@ -22,6 +22,7 @@ scale = Vector2( 1, 1 )
 ] instance=ExtResource( 2 )]
 
 transform/pos = Vector2( 80, 160 )
+display_name = "Player"
 
 [node name="Punch" parent="battlground/player" instance=ExtResource( 3 )]
 
@@ -35,6 +36,7 @@ _stats = "\"blunt\": 10"
 ] instance=ExtResource( 2 )]
 
 transform/pos = Vector2( 256, 160 )
+display_name = "Monster"
 
 [node name="Punch" parent="battlground/enemy" instance=ExtResource( 3 )]
 

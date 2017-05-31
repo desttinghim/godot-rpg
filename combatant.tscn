@@ -10,7 +10,6 @@ display_name = "Combatant"
 power = 1
 health = 50
 _stats = ""
-_moves = ""
 
 [node name="Sprite" type="Sprite" parent="."]
 
