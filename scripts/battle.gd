@@ -2,14 +2,15 @@ extends Node
 
 var Move = preload("res://scripts/move.gd")
 var DialogBox = preload("res://dialog_box.tscn")
+var StatPanel = preload("res://StatPanel.tscn")
 
 var battle_menu = null
-var sub_menu = null
 
 var combatants
 var team_1
 var team_2
 var targeter
+var stat_panels = []
 
 var main_menu = {Moves = "showmenu_moves", Items = "showmenu_items"}
 
@@ -19,12 +20,16 @@ func _ready():
 	var focus = create_battle_menu(main_menu)
 	show_battle_menu(focus)
 	
-	sub_menu = get_node("interface/cntr_battle_menu/SubMenu")
-	
 	combatants = get_tree().get_nodes_in_group("combatant")
 	team_1 = get_tree().get_nodes_in_group("team_1")
 	team_2 = get_tree().get_nodes_in_group("team_2")
 	targeter = get_node("interface/cntr_battle_menu/Targeter")
+	
+	for combatant in combatants:
+		var panel = StatPanel.instance()
+		panel.set_combatant(combatant)
+		get_node("interface/cntr_battle_menu/StatPanels").add_child(panel)
+		stat_panels.append(panel)
 	
 	set_process_input(true)
 
@@ -55,12 +60,14 @@ func btn_callback(txt):
 			return
 		show_target_select("team_2")
 		var target = yield(targeter, "select_callback")
-		var damage = target.take_damage(move.stats)
+		var state = target.apply_action(move.stats)
 		var dialog = DialogBox.instance()
 		add_child(dialog)
 		dialog.add_dialog(str(combatant.display_name, " uses ", move.display_name, 
-			" on ", target.display_name, " for ", damage, " damage."))
+			" on ", target.display_name))
 		dialog.start()
+		for panel in stat_panels:
+			panel.reload()
 		yield(dialog, "complete")
 		hide_target_select()
 		var focus = create_battle_menu(main_menu)

@@ -7,6 +7,7 @@ export(int) var health = 50
 export(String, MULTILINE) var _stats = ""
 
 var stats = {}
+var actions = []
 
 var modifiers = ["blunt", "sharp", "ranged", "sly", "fire", "water", "earth", "air", "spirit"]
 
@@ -16,9 +17,20 @@ func _ready():
 		if not stats.has(modifier):
 			stats[modifier] = 1
 
-func take_damage(attack):
-	var damage
-	for modifier in attack.keys():
-		damage = attack[modifier] * stats[modifier]
-	health -= damage
-	return damage
+func apply_action(action):
+	actions.append(action)
+	return get_current_state()
+
+func calc_action_result(action):
+	var hp = 0
+	for modifier in action.keys():
+		hp += action[modifier] * stats[modifier]
+	return hp
+
+func get_current_state():
+	var hp = health
+	var pp = power
+	for action in actions:
+		hp += calc_action_result(action)
+		#pp += action.pp
+	return {health=hp, power=pp, stats=stats}

@@ -28,7 +28,7 @@ display_name = "Player"
 
 display_name = "Punch"
 cost = 1
-_stats = "\"blunt\": 10"
+_stats = "\"blunt\": -10"
 
 [node name="enemy" parent="battlground" groups=[
 "team_2",
@@ -37,12 +37,13 @@ _stats = "\"blunt\": 10"
 
 transform/pos = Vector2( 232, 160 )
 display_name = "Monster"
+health = 25
 
 [node name="Punch" parent="battlground/enemy" instance=ExtResource( 3 )]
 
 display_name = "Punch"
 cost = 1
-_stats = "\"blunt\": 10"
+_stats = "\"blunt\": -10"
 
 [node name="enemy1" parent="battlground" groups=[
 "team_2",
@@ -51,12 +52,13 @@ _stats = "\"blunt\": 10"
 
 transform/pos = Vector2( 280, 160 )
 display_name = "Monster"
+health = 25
 
 [node name="Punch" parent="battlground/enemy1" instance=ExtResource( 3 )]
 
 display_name = "Punch"
 cost = 1
-_stats = "\"blunt\": 10"
+_stats = "\"blunt\": -10"
 
 [node name="interface" type="CanvasLayer" parent="."]
 
@@ -89,19 +91,6 @@ margin/right = 58.0
 margin/bottom = 116.0
 alignment = 0
 
-[node name="SubMenu" type="VBoxContainer" parent="interface/cntr_battle_menu"]
-
-anchor/bottom = 1
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 64.0
-margin/top = 32.0
-margin/right = 115.0
-margin/bottom = 168.0
-alignment = 0
-
 [node name="Targeter" type="Container" parent="interface/cntr_battle_menu"]
 
 visibility/visible = false
@@ -114,5 +103,17 @@ margin/top = 0.0
 margin/right = 0.0
 margin/bottom = 0.0
 script/script = ExtResource( 4 )
+
+[node name="StatPanels" type="HBoxContainer" parent="interface/cntr_battle_menu"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 192.0
+margin/right = 320.0
+margin/bottom = 240.0
+alignment = 0
 
 
