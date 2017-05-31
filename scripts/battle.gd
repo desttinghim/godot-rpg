@@ -29,7 +29,6 @@ func _ready():
 	set_process_input(true)
 
 # Callbacks
-var partial_action
 func btn_callback(txt):
 	var call = txt.split("_")
 	if call[0] == "showmenu" and call.size() > 1:
@@ -56,9 +55,11 @@ func btn_callback(txt):
 			return
 		show_target_select("team_2")
 		var target = yield(targeter, "select_callback")
+		var damage = target.take_damage(move.stats)
 		var dialog = DialogBox.instance()
 		add_child(dialog)
-		dialog.add_dialog(str(combatant.display_name, " uses ", move.display_name, " on ", target.display_name))
+		dialog.add_dialog(str(combatant.display_name, " uses ", move.display_name, 
+			" on ", target.display_name, " for ", damage, " damage."))
 		dialog.start()
 		yield(dialog, "complete")
 		hide_target_select()
@@ -101,7 +102,8 @@ func hide_battle_menu():
 func show_target_select(group):
 	for target in get_tree().get_nodes_in_group(group):
 		var selector = Button.new()
-		selector.set_text(target.display_name)
+		selector.set_text("^")
+		selector.set_tooltip(target.display_name)
 		selector.connect("pressed", targeter, "target_selected", [target])
 		targeter.add_child(selector)
 		

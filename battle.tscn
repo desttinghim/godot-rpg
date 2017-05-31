@@ -35,10 +35,24 @@ _stats = "\"blunt\": 10"
 "combatant",
 ] instance=ExtResource( 2 )]
 
-transform/pos = Vector2( 256, 160 )
+transform/pos = Vector2( 232, 160 )
 display_name = "Monster"
 
 [node name="Punch" parent="battlground/enemy" instance=ExtResource( 3 )]
+
+display_name = "Punch"
+cost = 1
+_stats = "\"blunt\": 10"
+
+[node name="enemy1" parent="battlground" groups=[
+"team_2",
+"combatant",
+] instance=ExtResource( 2 )]
+
+transform/pos = Vector2( 280, 160 )
+display_name = "Monster"
+
+[node name="Punch" parent="battlground/enemy1" instance=ExtResource( 3 )]
 
 display_name = "Punch"
 cost = 1
