@@ -22,6 +22,7 @@ var page = 0
 var text = null
 var next = null
 var decisions = null
+var cntr_decisions = null
 
 func _ready():
 	text = get_node("screen/dialog/text")
@@ -31,6 +32,7 @@ func _ready():
 	next.connect("pressed", self, "next")
 	
 	decisions = get_node("screen/decisions/decisions")
+	cntr_decisions = get_node("screen/decisions")
 	set_process_input(true)
 
 func _input(event):
@@ -48,6 +50,7 @@ func start():
 	next.grab_focus()
 
 func load_page(pg):
+	cntr_decisions.hide()
 	if pg >= pages.size():
 		print("Error! No such page...")
 		return
@@ -62,6 +65,7 @@ func load_page(pg):
 			btn.connect("pressed", self, "decision_callback", [option])
 			decisions.add_child(btn)
 		decisions.get_child(0).grab_focus()
+		cntr_decisions.show()
 	next.hide()
 
 func next():
