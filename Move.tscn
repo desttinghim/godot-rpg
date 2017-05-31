@@ -7,6 +7,8 @@
 script/script = ExtResource( 1 )
 display_name = "Move"
 cost = 0
+targets = 1
+can_target = "enemy"
 _stats = ""
 
 
