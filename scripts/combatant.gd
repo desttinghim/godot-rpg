@@ -6,10 +6,16 @@ export(int) var health = 50
 # figure out a sane way to export the modifiers
 export(String, MULTILINE) var _stats = ""
 
+signal hit_target
+signal back_to_start
+
 var stats = {}
 var actions = []
 
 var modifiers = ["blunt", "sharp", "ranged", "sly", "fire", "water", "earth", "air", "spirit"]
+
+onready var tween = get_node("Tween")
+onready var animate = get_node("AnimationPlayer")
 
 func _ready():
 	stats.parse_json(str("{",_stats,"}"))
@@ -34,3 +40,24 @@ func get_current_state():
 		hp += calc_action_result(action)
 		#pp += action.pp
 	return {health=hp, power=pp, stats=stats}
+
+func animate_move(move, target):
+	var startPos = get_pos()
+	var endPos = target.get_pos()
+	endPos.x -= target.get_node("Sprite").get_texture().get_width()
+	tween.interpolate_property(self, "transform/pos", startPos, endPos,
+						1.5, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	tween.start()
+	animate.play("Walk")
+	yield(tween, "tween_complete")
+	animate.stop()
+	animate.play("Punch")
+	yield(animate, "finished")
+	animate.stop_all()
+	emit_signal("hit_target")
+	tween.interpolate_property(self, "transform/pos", get_pos(), startPos,
+								.25, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	tween.start()
+	yield(tween, "tween_complete")
+	emit_signal("back_to_start")
+	

@@ -60,20 +60,17 @@ func btn_callback(txt):
 			return
 		show_target_select("team_2")
 		var target = yield(targeter, "select_callback")
+		hide_target_select()
+		combatant.animate_move(move, target)
+		yield(combatant, "hit_target")
 		var state = target.apply_action(move.stats)
-		var dialog = DialogBox.instance()
-		add_child(dialog)
-		dialog.add_dialog(str(combatant.display_name, " uses ", move.display_name, 
-			" on ", target.display_name))
-		dialog.start()
 		for panel in stat_panels:
 			panel.reload()
-		yield(dialog, "complete")
-		hide_target_select()
+		yield(combatant, "back_to_start")
 		var focus = create_battle_menu(main_menu)
 		show_battle_menu(focus)
 		
-	print(txt)
+	#print(txt)
 
 func select_callback(target):
 	hide_battle_menu()
