@@ -5,10 +5,8 @@ export(int) var power = 1
 export(int) var health = 50
 # figure out a sane way to export the modifiers
 export(String, MULTILINE) var _stats = ""
-export(String, MULTILINE) var _moves = ""
 
 var stats = {}
-#var moves = {}
 
 var modifiers = ["blunt", "sharp", "ranged", "sly", "fire", "water", "earth", "air", "spirit"]
 
@@ -17,7 +15,6 @@ func _ready():
 	for modifier in modifiers:
 		if not stats.has(modifier):
 			stats[modifier] = 1
-	#moves.parse_json(str("{",_moves,"}"))
 
 func take_damage(attack):
 	var damage
