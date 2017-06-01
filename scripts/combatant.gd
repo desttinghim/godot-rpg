@@ -42,30 +42,35 @@ func get_current_state():
 	return {health=hp, power=pp, stats=stats}
 
 func animate_move(move, target):
+	# Get positions for tweening
 	var startPos = get_pos()
 	var endPos = target.get_pos()
-	endPos.x -= target.get_node("Sprite").get_texture().get_width()
+	endPos.x -= target.get_node("Sprite").get_texture().get_width()+8
 	tween.set_active(true)
 	tween.interpolate_property(self, "transform/pos", startPos, endPos,
 						1.4, Tween.TRANS_LINEAR, Tween.EASE_IN)
 	tween.start()
 	animate.play("Walk")
-	print("Walking...")
+	# Wait for the tween to finish
 	yield(tween, "tween_complete")
-	print("Executing move...")
+	
 	animate.stop()
+	# Play the animation supplied for the move if it exists
 	if animate.has_animation(move.animation):
 		animate.play(move.animation)
 	else:
 		animate.play("Punch")
 	yield(animate, "finished")
-	print("Moving back to start...")
+	
 	animate.stop_all()
+	# Signal that the target has been hit
 	emit_signal("hit_target")
+	
+	# Move back to the first position
 	tween.interpolate_property(self, "transform/pos", get_pos(), startPos,
 								.25, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.start()
 	yield(tween, "tween_complete")
-	print("Done!")
+	
 	emit_signal("back_to_start")
 	
