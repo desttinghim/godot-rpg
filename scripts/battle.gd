@@ -1,6 +1,7 @@
 extends Node
 
 var Move = preload("res://scripts/move.gd")
+var Item = preload("res://scripts/item.gd")
 var DialogBox = preload("res://dialog_box.tscn")
 var StatPanel = preload("res://StatPanel.tscn")
 
@@ -45,7 +46,8 @@ func btn_callback(txt):
 			var focus = create_battle_menu(get_moves_menu("player"))
 			show_battle_menu(focus)
 		elif call[1] == "items":
-			pass # do nothing for now
+			var focus = create_battle_menu(get_items_menu("player"))
+			show_battle_menu(focus)
 	elif call[0] == "move":
 		if call.size() <= 2: 
 			print("Invalid move command")
@@ -131,6 +133,15 @@ func get_moves_menu(name):
 			moves[child.display_name] = str("move_", combatant.get_name(), "_", child.get_name())
 	moves["Back"] = "showmenu_main_Moves" 
 	return moves
+
+func get_items_menu(name):
+	var combatant = get_combatant(name)
+	var items = {}
+	for child in combatant.get_children():
+		if child extends Item:
+			items[child.display_name] = str("item_", combatant.get_name(), "_", child.get_name())
+	items["Back"] = "showmenu_main_Items" 
+	return items
 
 func get_combatant(name):
 	for combatant in get_tree().get_nodes_in_group("combatant"):

@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=1]
+[gd_scene load_steps=6 format=1]
 
 [ext_resource path="res://scripts/battle.gd" type="Script" id=1]
 [ext_resource path="res://combatant.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Move.tscn" type="PackedScene" id=3]
-[ext_resource path="res://scripts/targeter.gd" type="Script" id=4]
+[ext_resource path="res://Item.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scripts/targeter.gd" type="Script" id=5]
 
 [node name="scene" type="Node"]
 
@@ -29,6 +30,10 @@ display_name = "Player"
 display_name = "Punch"
 cost = 1
 _stats = "\"blunt\": -10"
+
+[node name="Hammer" parent="battlground/player" instance=ExtResource( 4 )]
+
+display_name = "Hammer"
 
 [node name="enemy" parent="battlground" groups=[
 "team_2",
@@ -86,9 +91,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 32.0
+margin/top = 0.0
 margin/right = 58.0
-margin/bottom = 116.0
+margin/bottom = 148.0
 alignment = 0
 
 [node name="Targeter" type="Container" parent="interface/cntr_battle_menu"]
@@ -102,7 +107,7 @@ margin/left = 0.0
 margin/top = 0.0
 margin/right = 0.0
 margin/bottom = 0.0
-script/script = ExtResource( 4 )
+script/script = ExtResource( 5 )
 
 [node name="StatPanels" type="HBoxContainer" parent="interface/cntr_battle_menu"]
 
