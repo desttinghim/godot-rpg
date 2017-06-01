@@ -2,6 +2,7 @@ extends Node
 
 export var display_name = "Move"
 export var cost = 0
+export(String, "Punch") var animation = ""
 const TARGET_TEAM = -1
 const TARGET_ALL = -2
 export var targets = 1

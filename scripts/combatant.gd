@@ -45,19 +45,27 @@ func animate_move(move, target):
 	var startPos = get_pos()
 	var endPos = target.get_pos()
 	endPos.x -= target.get_node("Sprite").get_texture().get_width()
+	tween.set_active(true)
 	tween.interpolate_property(self, "transform/pos", startPos, endPos,
-						1.5, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+						1.4, Tween.TRANS_LINEAR, Tween.EASE_IN)
 	tween.start()
 	animate.play("Walk")
+	print("Walking...")
 	yield(tween, "tween_complete")
+	print("Executing move...")
 	animate.stop()
-	animate.play("Punch")
+	if animate.has_animation(move.animation):
+		animate.play(move.animation)
+	else:
+		animate.play("Punch")
 	yield(animate, "finished")
+	print("Moving back to start...")
 	animate.stop_all()
 	emit_signal("hit_target")
 	tween.interpolate_property(self, "transform/pos", get_pos(), startPos,
 								.25, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	tween.start()
 	yield(tween, "tween_complete")
+	print("Done!")
 	emit_signal("back_to_start")
 	

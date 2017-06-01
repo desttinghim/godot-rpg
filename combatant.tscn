@@ -87,7 +87,6 @@ _stats = ""
 
 [node name="Sprite" type="Sprite" parent="."]
 
-transform/pos = Vector2( 4.3282, 0.0784378 )
 texture = ExtResource( 2 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
