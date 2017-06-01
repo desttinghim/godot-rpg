@@ -13,7 +13,8 @@ var team_2
 var targeter
 var stat_panels = []
 
-var main_menu = {Moves = "showmenu_moves", Items = "showmenu_items"}
+var main_menu = [["Moves", "showmenu_moves"], 
+				 ["Items", "showmenu_items"]]
 
 func _ready():
 	
@@ -86,11 +87,11 @@ func create_battle_menu(menu):
 		node.queue_free()
 	var first = true
 	var focus
-	for key in menu.keys():
+	for item in menu:
 		var btn = Button.new()
-		btn.text = key
-		btn.set_name(key)
-		btn.connect("pressed", self, "btn_callback", [menu[key]])
+		btn.text = item[0]
+		btn.set_name(item[0])
+		btn.connect("pressed", self, "btn_callback", [item[1]])
 		battle_menu.add_child(btn)
 		if first: 
 			first = false
@@ -127,20 +128,22 @@ func hide_target_select():
 # Utilities
 func get_moves_menu(name):
 	var combatant = get_combatant(name)
-	var moves = {}
+	var moves = []
 	for child in combatant.get_children():
 		if child extends Move:
-			moves[child.display_name] = str("move_", combatant.get_name(), "_", child.get_name())
-	moves["Back"] = "showmenu_main_Moves" 
+			moves.append([child.display_name, 
+					str("move_", combatant.get_name(), "_", child.get_name())])
+	moves.append(["Back", "showmenu_main_Moves"])
 	return moves
 
 func get_items_menu(name):
 	var combatant = get_combatant(name)
-	var items = {}
+	var items = []
 	for child in combatant.get_children():
 		if child extends Item:
-			items[child.display_name] = str("item_", combatant.get_name(), "_", child.get_name())
-	items["Back"] = "showmenu_main_Items" 
+			items.append([child.display_name, 
+					str("item_", combatant.get_name(), "_", child.get_name())])
+	items.append(["Back", "showmenu_main_Items"])
 	return items
 
 func get_combatant(name):
