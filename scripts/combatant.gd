@@ -48,7 +48,7 @@ func animate_move(move, target):
 	endPos.x -= target.get_node("Sprite").get_texture().get_width()+8
 	tween.set_active(true)
 	tween.interpolate_property(self, "transform/pos", startPos, endPos,
-						1.4, Tween.TRANS_LINEAR, Tween.EASE_IN)
+						0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 	tween.start()
 	animate.play("Walk")
 	# Wait for the tween to finish
